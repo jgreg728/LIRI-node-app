@@ -6,9 +6,11 @@
 
 // Request
 // dotemv
-
+                                                                                               
 var Spotify = require("node-spotify-api");
-var moment = require("moment");
+var moment = require('moment');
+// vvvv w/o this line var moment doesnt get applied
+moment().format("MM:DD:YYYY");
 var request = require("request");
 
 // turn on dotenv load up from .env file
@@ -25,10 +27,7 @@ var action = process.argv[2];
 // what gets searched
 var searchResult = process.argv[3];
 
-
-
 function switchCase() {
-
   switch (action) {
 
     case 'concert-this':
@@ -55,6 +54,8 @@ function switchCase() {
   }
 };
 
+
+// BAND CONCERT SEARCH
 function bandsInTown(searchResult){
 
 if (action === 'concert-this')
@@ -71,14 +72,12 @@ else
 	movieName = searchResult;
 }
 
-
-
 var queryUrl = "https://rest.bandsintown.com/artists/"+movieName+"/events?app_id=codingbootcamp";
 
+// REQUEST
+request(queryUrl, function(err, response, body) {
 
-request(queryUrl, function(error, response, body) {
-
-  if (!error && response.statusCode === 200) {
+  if (!err && response.statusCode === 200) {
 
     var JS = JSON.parse(body);
     for (i = 0; i < JS.length; i++)
@@ -106,6 +105,8 @@ request(queryUrl, function(error, response, body) {
   }
 });
 }
+
+// MUSIC SEARCH
 function spotifySearch(searchResult) {
 
 
@@ -119,9 +120,9 @@ function spotifySearch(searchResult) {
   spotify.search({
     type: 'track',
     query: searchTrack
-  }, function(error, data) {
-    if (error) {
-      console.log('Error occurred: ' + error);
+  }, function(err, data) {
+    if (err) {
+      console.log('error occurred: ' + err);
       return;
     } else {
       console.log("\n---------------------------------------------------\n");
@@ -134,6 +135,8 @@ function spotifySearch(searchResult) {
     }
   });
 };
+
+// MOVIE SEARCH
 function movieInfo(searchResult) {
 
 
@@ -147,7 +150,9 @@ function movieInfo(searchResult) {
   var queryUrl = "http://www.omdbapi.com/?t=" + findMovie + "&y=&plot=short&apikey=trilogy";
   
   request(queryUrl, function(err, res, body) {
-  	var bodyOf = JSON.parse(body);
+    var bodyOf = JSON.parse(body);
+    var moment = require('moment'); 
+    moment("MM:DD:YYYY").format();
     if (!err && res.statusCode === 200) {
       console.log("\n---------------------------------------------------\n");
       console.log("Title: " + bodyOf.Title);
@@ -164,10 +169,10 @@ function movieInfo(searchResult) {
 };
 
 function getRandom() {
-fs.readFile('random.txt', "utf8", function(error, data){
+fs.readFile('random.txt', "utf8", function(err, data){
 
-    if (error) {
-        return console.log(error);
+    if (err) {
+        return console.log(err);
       }
 
   
@@ -180,7 +185,7 @@ fs.readFile('random.txt', "utf8", function(error, data){
     } 
     else if (dataArr[0] === "concert-this") 
     { 
-      if (dataArr[1].charAt(1) === "'")
+      if (dataArr[1].charAt(1) === "")
       {
       	var dLength = dataArr[1].length - 1;
       	var data = dataArr[1].substring(2,dLength);
@@ -211,7 +216,7 @@ function dataToLog() {
 
 	fs.appendFile('log.txt', dataToLog + '\n', function(err) {
 		
-		if (err) return console.log('Error logging data to file: ' + err);	
+		if (err) return console.log('err logging data to file: ' + err);	
 	});
 }
 
