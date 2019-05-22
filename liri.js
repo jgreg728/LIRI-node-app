@@ -26,8 +26,10 @@ var spotify = new Spotify({id: spotifyKeys.id,
 // The type of action you wish to take for the app (whether you want to search a song, concert or movie)
 var action = process.argv[2];
 
-// what gets searched
+
+// WHAT GETS SEARCHED
 var searchResult = process.argv[3];
+
 
 function switchCase() {
   switch (action) {
